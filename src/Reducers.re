@@ -1,5 +1,6 @@
 type titleStateT = SceneTitle.sceneTitleProps;
 type battleStateT = SceneBattle.sceneBattleProps;
+type gameOverStateT = SceneGameOver.sceneGameOverPropsT;
 type gameStateT = Game.gameStateT;
 
 let combineGameWithTitle = (gameState:gameStateT, titleState:titleStateT) => {
@@ -14,5 +15,9 @@ let combineGameWithBattle = (gameState:gameStateT, battleState:battleStateT) => 
     score: battleState.score,
     lives: battleState.lives
   };
+};
+
+let combineGameWithGameOver = (gameState:gameStateT, gameOverState:gameOverStateT) => {
+ {...gameState, score: gameOverState.score, highScore: gameOverState.highScore}
 };
 
