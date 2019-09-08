@@ -1,11 +1,29 @@
 open Reprocessing;
+open Entity;
+open Reducers;
+open Game;
 
-let setup = (env) => Env.size(~width=600, ~height=600, env);
+let setup = (env) => {
+  Env.size(~width=800, ~height=600, env);
+  {score: 0, lives: 3, player:Player.player((100, 100)), enemies: [], gameScene: Title, title: "Nier Space"};
+}
 
-let draw = (_state, env) => {
-  Draw.background(Utils.color(~r=255, ~g=217, ~b=229, ~a=255), env);
-  Draw.fill(Utils.color(~r=41, ~g=166, ~b=244, ~a=255), env);
-  Draw.rect(~pos=(150, 150), ~width=300, ~height=300, env)
+
+
+let draw = ({score, title, lives, player, enemies, gameScene} as state, env) => {
+ switch(gameScene) {
+    | Title => {
+      let titleState = SceneTitle.make(~props={title:title}, env);
+      combineGameWithTitle(state, titleState);
+      } 
+    | Battle => {
+      let battleState = SceneBattle.make(~props={player, enemies, lives, score}, env);
+      combineGameWithBattle(state, battleState);
+    }
+        | GameOver => state
+    | HighScore => state
+  };
+
 };
 
 run(~setup, ~draw, ());
