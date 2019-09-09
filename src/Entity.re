@@ -27,6 +27,7 @@ type action =
 | AddMoveTo(int, int)
 | NoStateChange;
 
+type sideEffect('a) = ('a) => unit;
 
 let make = (~health, ~atk, ~def, ~pos, ~type_) => {
   {health, atk, def, position:pos, type_, status: Alive}
@@ -52,7 +53,9 @@ let dispatcher = (entityState, action) => switch(action) {
   | AddHealth(value) => {...entityState, health: entityState.health + value }
   | AddDef(value) => {...entityState, def: entityState.def + value}
   | AddAtk(value) => {...entityState, atk: entityState.atk + value}
-  | CollideWith(entityType) => {...entityState, status: Dead }
+  | CollideWith(entityType) => {
+    {...entityState, status: Dead };
+  }
   | AddMoveTo(x, y) => {
       let (posX, posY) = entityState.position;
       {...entityState, position: (posX + x, posY + y)};
